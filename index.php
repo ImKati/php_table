@@ -16,12 +16,17 @@ $host = 'localhost';
 $user = 'root';
 $password = '12345';
 $db_name = 'users';
-$connections = mysqli_connect($host, $user, $password, $db_name) or die(mysqli_error($connections));
-mysqli_query($connections, "SET NAMES 'utf8'");
+$conn = new mysqli($host, $user, $password, $db_name) or die(mysqli_error($connections));
 
-$query = "select * from users";
+if ($conn->connect_error) {
+    die("ERROR: Unable to connect: " . $conn->connect_error);
+}
 
-$result = mysqli_query($connections, $query);
+echo 'Connected to the database.<br>';
+
+$result = $conn->query("SELECT * FROM users");
+
+echo "Number of rows: $result->num_rows";
 
 echo "<table class='tab'>";
 
@@ -31,16 +36,20 @@ while($user = mysqli_fetch_assoc($result)){
     <td>" . $user['name'] . "</td>
     <td>" . $user['age'] . "</td>
     <td>" . $user['salary'] . "</td>
-    <td><a href='index.php?del=$user'>Delete</a></td>
+    <td><a href='index.php?del={$user['id']}'>Delete</a></td>
 </tr>";
 }
+
 if(isset($_GET['del'])) {
     $del = (int)$_GET['del'];
-    $query = "DELETE FROM workers WERE id=$del";
-    $result = mysqli_query($connections, $query)  (mysqli_error($connections));
+    $query = "DELETE FROM users WHERE id={'$del'}";
+    $result = $conn->query("DELETE FROM users where id={$del}");
+
     if (!$result) {
         die("Database query failed");
     }
+
+    header("Location: index.php");
 }
 
 echo"</table>";
