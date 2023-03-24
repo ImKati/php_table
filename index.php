@@ -16,7 +16,7 @@
     <input type="text" name="name" placeholder="Имя"><br><br>
     <input type="text" name="age" placeholder="Возраст"><br><br>
     <input type="text" name="salary" placeholder="Зарплата"><br><br>
-    <button type="submit">Create</button>
+    <button type="submit">Выполнить</button>
 </form>
 </body>
 
@@ -45,9 +45,12 @@ while ($user = mysqli_fetch_assoc($result)) {
     <td>" . $user['name'] . "</td>
     <td>" . $user['age'] . "</td>
     <td>" . $user['salary'] . "</td>
-    <td><a href='index.php?del={$user['id']}'>Delete</a></td>
+    <td><a href='index.php?del={$user['id']}'>Удалить</a></td>
+    <td><a href= 'index.php?edit={$user['id']}' target='_blank'>Редактировать</href></td>
+    
 </tr>";
 }
+
 
 echo "</table>";
 
@@ -67,12 +70,31 @@ if (isset($_POST['name']) && isset($_POST['age']) && isset($_POST['salary'])) {
     $name = $_POST['name'];
     $age = $_POST['age'];
     $salary = $_POST['salary'];
-    //echo "INSERT INTO users (name, age , salary) values ($name, $age, $salary)";
     $result = $conn->query("INSERT INTO users (name, age , salary) values ('$name', '$age', '$salary')");
 
     header("Location: index.php");
 }
 
+if ((!empty($_REQUEST['name'])) and
+    !empty($_REQUEST['age']) and
+    !empty($_REQUEST['salary'])) {
+    $names = ($_REQUEST['name']);
+    $age = strip_tags($_REQUEST['age']);
+    $salary = strip_tags($_REQUEST['salary']);
+    $name = mysqli_real_escape_string($connections, $names);
+    if (isset($_REQUEST['upd'])) {
+        if (!empty($_REQUEST)) {
+            $upd = $_REQUEST['upd'];
+        }
+        $query = ("UPDATE users SET name='$name', age= '$age' , salary= '$salary'  WHERE id= $upd ");
+        $result = mysqli_query($connections, $query) or die(mysqli_error($connections));
+        if (!$result) {
+            die("Database query failed");
+        }
+    }
+    header("Location:index.php");
+    exit;
+}
 
 
 
