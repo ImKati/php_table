@@ -61,10 +61,10 @@ if (isset($_POST['name']) && isset($_POST['age']) && isset($_POST['salary']) && 
 
 if(move_uploaded_file($_FILES['filename']['tmp_name'], 'temp/' . $_FILES['filename']['name'])){
     $id = (int)$_POST['id'];
-    $include_path = $_FILES['filename']['tmp_name'];
+    $include_path = 'D:/OSPanel/domains/localhost/temp/' . basename($_FILES['filename']['name']);
 
-    echo "UPDATE users SET avatar = '$include_path' where id={$id}";
-    //$result = $conn->query("UPDATE users SET avatar = '$path_to_avatar' where id={$id}");
+    //echo "UPDATE users SET avatar = '$include_path' where id={$id}";
+    $result = $conn->query("UPDATE users SET avatar = '$include_path' where id={$id}");
     echo 'Файл скопирован на сервер';
 }else{
     //echo 'Файл не скопировался на сервер';
