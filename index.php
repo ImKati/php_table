@@ -41,13 +41,13 @@ echo "<table class='tab'>";
 
 while ($user = mysqli_fetch_assoc($result)) {
     echo "<tr>
+    <td>" . $user['avatar'] . "</td>
     <td>" . $user['id'] . "</td>
     <td>" . $user['name'] . "</td>
     <td>" . $user['age'] . "</td>
     <td>" . $user['salary'] . "</td>
     <td><a href='index.php?del={$user['id']}'>Удалить</a></td>
-    <td><a href= 'index2.php' target='_blank'>Редактировать</href></td>
-    
+    <td><a href= 'index2.php?upd={$user['id']}' target='_blank'>Редактировать</href></td>
 </tr>";
 }
 

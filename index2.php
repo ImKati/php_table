@@ -8,11 +8,18 @@
     <title>Document</title>
 </head>
 <body>
-<form action="index.php" method="post">
+<form action="index2.php" method="post">
+    <input type="hidden" name="id" value="<?php echo $_GET['upd']; ?>">
     <input type="text" name="name" placeholder="Имя"><br><br>
     <input type="text" name="age" placeholder="Возраст"><br><br>
     <input type="text" name="salary" placeholder="Зарплата"><br><br>
     <button type="submit">Изменить</button>
+
+</form>
+<form  action="index2.php" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="<?php echo $_GET['upd']; ?>">
+    <input type="file" name="filename"><br>
+    <input type="submit" value="Отправить">
 </form>
 </body>
 </html>
@@ -40,13 +47,27 @@ while ($user = mysqli_fetch_assoc($result)) {
 
 }
 
-if (isset($_POST['name']) && isset($_POST['age']) && isset($_POST['salary'])) {
+if (isset($_POST['name']) && isset($_POST['age']) && isset($_POST['salary']) && isset($_POST['id'])) {
 
+    $id = (int)$_POST['id'];
     $name = $_POST['name'];
     $age = $_POST['age'];
     $salary = $_POST['salary'];
-    $result = $conn->query("INSERT INTO users (name, age , salary) values ('$name', '$age', '$salary')");
+
+    $result = $conn->query("UPDATE users SET name = '$name', age = '$age', salary = '$salary' where id={$id} ");
 
     header("Location: index.php");
 }
+
+if(move_uploaded_file($_FILES['filename']['tmp_name'], 'temp/' . $_FILES['filename']['name'])){
+    $id = (int)$_POST['id'];
+    $include_path = $_FILES['filename']['tmp_name'];
+
+    echo "UPDATE users SET avatar = '$include_path' where id={$id}";
+    //$result = $conn->query("UPDATE users SET avatar = '$path_to_avatar' where id={$id}");
+    echo 'Файл скопирован на сервер';
+}else{
+    //echo 'Файл не скопировался на сервер';
+};
+
 
